@@ -1,25 +1,25 @@
 const data_analyze = async () =>{
+
 //GET f(x)
 const get_data = async () => {
     try {
       const response = await fetch("https://one00x-data-analysis.onrender.com/assignment?email=praanav.999@gmail.com");
   
-      if (response.ok) {
+      
         const data = await response.json(); // Parse the response JSON
-        // const headers = response.headers;
-        // console.log(data);
-        // console.log(headers);
-        return data;
-      } else {
-        console.log("Status error: " + response.status);
-      }
-    } catch (error) {
+        const headers = response.headers.get('x-assignment-id');
+        // console.log( "unique-id:"+headers);
+        //  console.log(data); 
+        return {data ,headers} ;
+          } catch (error) {
       console.log("Error: " + error);
     }
   };
-  const data = await get_data();
 
-  //Analyzing logic
+  //calling GET f(x)
+  const {data, headers} = await get_data();
+  
+  //Analyzing logic f(x)
   const analyzeData = async (data) => {
    
      // creating object for counting array strings
@@ -28,9 +28,9 @@ const get_data = async () => {
       let maxFrequency = 0;
   
       //looping and increment string value if it is repeating
-      data.forEach((str) => {
+       data.forEach((str) => {
         if (analysis[str]) {
-          analysis[str]++;
+           analysis[str]++;
         } else {
           analysis[str] = 1;
         }
@@ -47,14 +47,16 @@ const get_data = async () => {
       return mostRepeated;
     
   };
+  //calling analyzing f(x)
   const word = await analyzeData(data) ;
   
   //POST f(x)
-const post_data =  async (word) => {
+const post_data =  async (word , headers) => {
     
 
    const data ={
-        assignment_id : "6303a714-a639-4675-9b8f-b83c71b801f9",
+       
+        assignment_id :headers,
         answer : word ,  
     };
 
@@ -63,7 +65,7 @@ const post_data =  async (word) => {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                // 'assignment_id': '6303a714-a639-4675-9b8f-b83c71b801f9',
+              
             },
             body: JSON.stringify(data),
         })
@@ -82,7 +84,8 @@ const post_data =  async (word) => {
 
     }
 }
-  post_data(word);
+//calling POST f(x)
+ post_data(word ,headers);
 
 
 }
